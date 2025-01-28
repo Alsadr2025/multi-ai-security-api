@@ -1,0 +1,138 @@
+from flask import Flask, request, jsonify
+import random
+
+app = Flask(__name__)
+
+# Simulated Vulnerability Database
+vulnerability_database = {
+    "prompt_injection": ["SQL Injection via LLM", "Data Leakage"],
+    "adversarial_attack": ["Poisoned AI Model", "Bypass Authentication"],
+    "phishing": ["Credential Harvesting", "Session Hijacking"]
+}
+
+# Simulated Guardrails for Defense AI
+guardrails = {
+    "apply_sanitization": "Sanitizing inputs to prevent SQL Injection",
+    "reject_malicious_prompts": "Blocking adversarial AI attacks",
+    "firewall_update": "Updating firewall rules to prevent data exfiltration"
+}
+
+
+# -------------------- ATTACK AI AGENT --------------------
+@app.route('/api/attack-simulation', methods=['POST'])
+def attack_simulation():
+    """
+    Simulates an AI-driven cyberattack.
+    """
+    data = request.json
+    attack_type = data.get("attack_type", "prompt_injection")
+    system = data.get("target", "unknown_system")
+    
+    # Select vulnerabilities related to the attack type
+    vulnerabilities = vulnerability_database.get(attack_type, ["Unknown vulnerability"])
+    
+    return jsonify({
+        "status": "attack_successful",
+        "target": system,
+        "attack_type": attack_type,
+        "identified_vulnerabilities": vulnerabilities
+    })
+
+
+# -------------------- TEST AI AGENT --------------------
+@app.route('/api/test-defense', methods=['POST'])
+def test_defense():
+    """
+    Tests the system's response to an attack.
+    """
+    data = request.json
+    system = data.get("system", "unknown_system")
+    vulnerability = data.get("vulnerability", "unknown_vulnerability")
+    
+    # Randomly determine how well the system is protected
+    protection_status = random.choice(["Fully Protected", "Partially Protected", "Not Protected"])
+    
+    return jsonify({
+        "status": protection_status,
+        "system": system,
+        "vulnerability": vulnerability,
+        "recommendation": "Enable LLM Guardrails and firewall updates"
+    })
+
+
+# -------------------- DEFENSE AI AGENT --------------------
+@app.route('/api/deploy-defense', methods=['POST'])
+def deploy_defense():
+    """
+    Deploys real-time security countermeasures.
+    """
+    data = request.json
+    system = data.get("system", "unknown_system")
+    vulnerability = data.get("vulnerability", "unknown_vulnerability")
+    
+    # Select a random guardrail to apply
+    applied_guardrail = random.choice(list(guardrails.keys()))
+    
+    return jsonify({
+        "status": "protection_applied",
+        "system": system,
+        "vulnerability": vulnerability,
+        "applied_guardrail": guardrails[applied_guardrail]
+    })
+
+
+# -------------------- LLM VULNERABILITY SCANNER --------------------
+@app.route('/api/llm-vulnerability-scan', methods=['POST'])
+def llm_vulnerability_scan():
+    """
+    Scans a Generative AI system for vulnerabilities.
+    """
+    data = request.json
+    system = data.get("system", "AI Chatbot")
+    detected_vulnerabilities = random.sample(list(vulnerability_database.keys()), 2)
+
+    return jsonify({
+        "system": system,
+        "vulnerabilities_detected": detected_vulnerabilities,
+        "risk_level": "High" if len(detected_vulnerabilities) > 1 else "Medium"
+    })
+
+
+# -------------------- LLM GUARDRAILS --------------------
+@app.route('/api/apply-llm-guardrails', methods=['POST'])
+def apply_llm_guardrails():
+    """
+    Applies AI-based Guardrails to prevent malicious inputs.
+    """
+    data = request.json
+    system = data.get("system", "AI Chatbot")
+    applied_protections = [guardrails["reject_malicious_prompts"], guardrails["apply_sanitization"]]
+
+    return jsonify({
+        "system": system,
+        "status": "guardrails_applied",
+        "protections_enabled": applied_protections
+    })
+
+
+# -------------------- MONITORING & SECURITY REPORT --------------------
+@app.route('/api/security-report', methods=['GET'])
+def security_report():
+    """
+    Generates a security report of detected vulnerabilities and applied defenses.
+    """
+    return jsonify({
+        "total_vulnerabilities_detected": random.randint(5, 15),
+        "mitigated_vulnerabilities": random.randint(3, 10),
+        "remaining_risks": random.randint(0, 5),
+        "recommendations": [
+            "Upgrade AI model security policies",
+            "Enhance API access control",
+            "Enable continuous monitoring"
+        ]
+    })
+
+
+# -------------------- RUN THE API --------------------
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
